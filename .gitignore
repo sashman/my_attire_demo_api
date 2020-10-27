@@ -28,3 +28,5 @@ my_attire_demo_api-*.tar
 /priv/static/
 
 docker-elk/
+
+*.csv

@@ -46,3 +46,8 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :elasticsearch_elixir_bulk_processor,
+       ElasticsearchElixirBulkProcessor.ElasticsearchCluster,
+       url: "http://localhost:9200",
+       api: Elasticsearch.API.HTTP

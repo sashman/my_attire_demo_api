@@ -1,5 +1,6 @@
 defmodule MyAttireDemoApiWeb.AttireController do
   use MyAttireDemoApiWeb, :controller
+  alias ElasticsearchElixirBulkProcessor.Items.Index
 
   action_fallback MyAttireDemoApiWeb.FallbackController
 
@@ -8,9 +9,12 @@ defmodule MyAttireDemoApiWeb.AttireController do
     file.path
       |> File.stream!()
       |> CSV.decode(headers: true)
-      |> Stream.take(5)
+      |> Stream.map(fn {:ok, record} -> record end)
+      |> Stream.map(fn record ->
+        %Index{index: "attire", source: record}
+      end)
       |> Enum.to_list()
-      |> IO.inspect()
+      |> ElasticsearchElixirBulkProcessor.send_requests()
 
     conn
     |> json("ok")

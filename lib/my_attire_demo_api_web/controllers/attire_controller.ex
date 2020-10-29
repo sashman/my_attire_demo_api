@@ -6,9 +6,7 @@ defmodule MyAttireDemoApiWeb.AttireController do
   action_fallback MyAttireDemoApiWeb.FallbackController
 
   def bulk_upload(conn, %{"attire" => file}) do
-
-    file.path
-      |> Bulk.upload_bulk_data()
+    Bulk.upload_bulk_data(file)
 
     conn
     |> json("ok")

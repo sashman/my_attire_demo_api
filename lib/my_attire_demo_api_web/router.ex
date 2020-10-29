@@ -8,7 +8,7 @@ defmodule MyAttireDemoApiWeb.Router do
   scope "/api", MyAttireDemoApiWeb do
     pipe_through :api
 
-    post "bulk_upload", AttireController, :bulk_upload
+    post "/bulk_upload", AttireController, :bulk_upload
   end
 
   # Enables LiveDashboard only for development

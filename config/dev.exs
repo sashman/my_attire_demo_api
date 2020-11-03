@@ -7,7 +7,7 @@ use Mix.Config
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
 config :my_attire_demo_api, MyAttireDemoApiWeb.Endpoint,
-  http: [port: 4000, protocol_options: [idle_timeout: 240_000]],
+  http: [port: 4000, protocol_options: [idle_timeout: 300_000]],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
@@ -49,5 +49,11 @@ config :phoenix, :plug_init_mode, :runtime
 
 config :elasticsearch_elixir_bulk_processor,
        ElasticsearchElixirBulkProcessor.ElasticsearchCluster,
-       url: "http://localhost:9200",
-       api: Elasticsearch.API.HTTP
+       url: "http://212.47.241.165:9200/",
+       api: Elasticsearch.API.HTTP,
+       username: "myattire",
+       password: "pAi8CG^z1cTe2A",
+       default_options: [
+         timeout: 30_000,
+         recv_timeout: 30_000
+       ]

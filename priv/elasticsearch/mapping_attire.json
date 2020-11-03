@@ -1,0 +1,114 @@
+{
+  "mappings": {
+    "properties": {
+      "aw_deep_link": {
+        "type": "keyword"
+      },
+      "aw_image_url": {
+        "type": "keyword"
+      },
+      "aw_product_id": {
+        "type": "keyword"
+      },
+      "category_id": {
+        "type": "keyword"
+      },
+      "category_name": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          },
+          "search_as_you_type": {
+            "type": "search_as_you_type"
+          }
+        }
+      },
+      "currency": {
+        "type": "keyword"
+      },
+      "data_feed_id": {
+        "type": "keyword"
+      },
+      "delivery_cost": {
+        "type": "float"
+      },
+      "description": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          },
+          "search_as_you_type": {
+            "type": "search_as_you_type"
+          }
+        }
+      },
+      "display_price": {
+        "type": "keyword"
+      },
+      "language": {
+        "type": "keyword"
+      },
+      "last_updated": {
+        "type": "date"
+      },
+      "merchant_category": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          },
+          "search_as_you_type": {
+            "type": "search_as_you_type"
+          }
+        }
+      },
+      "merchant_deep_link": {
+        "type": "keyword"
+      },
+      "merchant_id": {
+        "type": "keyword"
+      },
+      "merchant_image_url": {
+        "type": "keyword"
+      },
+      "merchant_name": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          },
+          "search_as_you_type": {
+            "type": "search_as_you_type"
+          }
+        }
+      },
+      "merchant_product_id": {
+        "type": "keyword"
+      },
+      "product_name": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          },
+          "search_as_you_type": {
+            "type": "search_as_you_type"
+          }
+        }
+      },
+      "search_price": {
+        "type": "float"
+      },
+      "store_price": {
+        "type": "float"
+      }
+    }
+  }
+}

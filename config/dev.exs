@@ -49,7 +49,7 @@ config :phoenix, :plug_init_mode, :runtime
 
 config :elasticsearch_elixir_bulk_processor,
        ElasticsearchElixirBulkProcessor.ElasticsearchCluster,
-       url: "http://212.47.241.165:9200/",
+       url: "http://51.15.209.94:9200/",
        api: Elasticsearch.API.HTTP,
        username: "myattire",
        password: "pAi8CG^z1cTe2A",

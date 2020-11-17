@@ -11,4 +11,40 @@ defmodule MyAttireDemoApiWeb.AttireController do
     conn
     |> json("ok")
   end
+
+  def search(conn, %{"term" => term}) do
+    filter_path =
+      "hits.hits._id,hits.hits._score,hits.hits.highlight,hits.hits._source,hits.total,aggregations"
+
+    {:ok, results} =
+      Elasticsearch.post(
+        MyAttireDemoApi.ElasticsearchCluster,
+        "/attire/_search?track_total_hits=true&filter_path=#{filter_path}",
+        %{
+          "query" => %{
+            "bool" => %{
+              "must" => %{
+                "multi_match" => %{
+                  "query" => term,
+                  "type" => "most_fields",
+                  "fields" => [
+                    "product_name^3",
+                    "description^2",
+                    "category_name",
+                    "merchant_name"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      )
+
+    results =
+      results
+      |> Map.get("hits")
+
+    conn
+    |> json(results)
+  end
 end

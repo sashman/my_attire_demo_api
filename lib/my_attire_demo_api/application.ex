@@ -12,7 +12,8 @@ defmodule MyAttireDemoApi.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: MyAttireDemoApi.PubSub},
       # Start the Endpoint (http/https)
-      MyAttireDemoApiWeb.Endpoint
+      MyAttireDemoApiWeb.Endpoint,
+      MyAttireDemoApi.ElasticsearchCluster
       # Start a worker by calling: MyAttireDemoApi.Worker.start_link(arg)
       # {MyAttireDemoApi.Worker, arg}
     ]

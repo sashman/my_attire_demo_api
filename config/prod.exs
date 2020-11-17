@@ -20,7 +20,18 @@ config :logger, level: :info
 
 config :elasticsearch_elixir_bulk_processor,
        ElasticsearchElixirBulkProcessor.ElasticsearchCluster,
-       url: "http://212.47.241.165:9200/",
+       url: "http://51.15.209.94:9200/",
+       api: Elasticsearch.API.HTTP,
+       username: "myattire",
+       password: "pAi8CG^z1cTe2A",
+       default_options: [
+         timeout: 30_000,
+         recv_timeout: 30_000
+       ]
+
+config :my_attire_demo_api,
+       MyAttireDemoApi.ElasticsearchCluster,
+       url: "http://51.15.209.94:9200/",
        api: Elasticsearch.API.HTTP,
        username: "myattire",
        password: "pAi8CG^z1cTe2A",

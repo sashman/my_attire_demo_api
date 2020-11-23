@@ -10,6 +10,9 @@ defmodule MyAttireDemoApiWeb.Router do
 
     post "/bulk_upload", AttireController, :bulk_upload
     post "/search", AttireController, :search
+    get "/mens", AttireController, :mens
+    get "/womens", AttireController, :womens
+    get "/item/:id", AttireController, :item
   end
 
   # Enables LiveDashboard only for development

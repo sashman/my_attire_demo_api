@@ -48,6 +48,19 @@ defmodule MyAttireDemoApiWeb.AttireController do
     |> json(results)
   end
 
+  def item(conn, %{"id" => id}) do
+    filter_path = "_id,_source"
+
+    {:ok, results} =
+      Elasticsearch.get(
+        MyAttireDemoApi.ElasticsearchCluster,
+        "/attire/_doc/#{id}?filter_path=#{filter_path}"
+      )
+
+    conn
+    |> json(results)
+  end
+
   def mens(conn, _params) do
     filter_path =
       "hits.hits._id,hits.hits._score,hits.hits.highlight,hits.hits._source,hits.total,aggregations"

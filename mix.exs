@@ -41,7 +41,8 @@ defmodule MyAttireDemoApi.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:csv, "~> 2.4"},
-      {:elasticsearch_elixir_bulk_processor, "~> 0.1"}
+      {:elasticsearch_elixir_bulk_processor, "~> 0.1"},
+      {:cors_plug, "~> 2.0"}
     ]
   end
 

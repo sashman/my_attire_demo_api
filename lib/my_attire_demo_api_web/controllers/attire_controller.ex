@@ -38,6 +38,7 @@ defmodule MyAttireDemoApiWeb.AttireController do
             }
           }
         }
+        |> exclude_merchants()
       )
 
     results =
@@ -69,7 +70,7 @@ defmodule MyAttireDemoApiWeb.AttireController do
       Elasticsearch.post(
         MyAttireDemoApi.ElasticsearchCluster,
         "/attire/_search?track_total_hits=true&filter_path=#{filter_path}",
-        gendered_query("men's")
+        gendered_query("men's") |> exclude_merchants()
       )
 
     results =
@@ -88,7 +89,7 @@ defmodule MyAttireDemoApiWeb.AttireController do
       Elasticsearch.post(
         MyAttireDemoApi.ElasticsearchCluster,
         "/attire/_search?track_total_hits=true&filter_path=#{filter_path}",
-        gendered_query("women's")
+        gendered_query("women's") |> exclude_merchants()
       )
 
     results =
@@ -113,5 +114,24 @@ defmodule MyAttireDemoApiWeb.AttireController do
         }
       }
     }
+  end
+
+  defp exclude_merchants(query) do
+    exclusion = [
+      %{
+        "bool" => %{
+          "filter" => [
+            %{
+              "term" => %{
+                "merchant_name.keyword": "boohoo.com UK & IE"
+              }
+            }
+          ]
+        }
+      }
+    ]
+
+    query
+    |> put_in(["query", "bool", "must_not"], exclusion)
   end
 end

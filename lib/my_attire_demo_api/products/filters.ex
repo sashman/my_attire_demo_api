@@ -9,13 +9,13 @@ defmodule MyAttireDemoApi.Filters do
         %{
           "size" => 0,
           "aggs" => %{
-            "categories" => %{
+            "category_name" => %{
               "terms" => %{
                 field: "category_name.keyword",
                 size: 1000
               }
             },
-            "merchants" => %{
+            "merchant_name" => %{
               "terms" => %{
                 field: "merchant_name.keyword",
                 size: 1000

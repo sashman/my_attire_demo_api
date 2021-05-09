@@ -1,12 +1,19 @@
 defmodule MyAttireDemoApiWeb.Resolvers.Prodcuts do
   alias MyAttireDemoApi.{Products, Filters}
 
-  def list_products(_parent, %{term: term, page: page, page_size: page_size}, _resolution) do
-    products_response = Products.search(term, page, page_size)
+  def list_products(
+        _parent,
+        %{term: term, page: page, page_size: page_size, filters: filters},
+        _resolution
+      ) do
+    products_response = Products.search(term, page, page_size, filters)
 
     data =
       products_response
-      |> get_in(["hits", "hits"])
+      |> case do
+        %{"hits" => %{"hits" => hits}} -> hits
+        _ -> []
+      end
       |> Enum.map(fn %{"_source" => source} ->
         %{
           category_name: source["category_name"],

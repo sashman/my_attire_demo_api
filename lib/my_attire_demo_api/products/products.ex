@@ -1,5 +1,5 @@
 defmodule MyAttireDemoApi.Products do
-  def search(term, page, page_size) do
+  def search(term, page, page_size, filters) do
     page_size = page_size || 10
     page = page || 0
     from_offset = from(page_size, page)
@@ -31,7 +31,9 @@ defmodule MyAttireDemoApi.Products do
             }
           }
         }
+        |> add_filters(filters)
         |> exclude_merchants()
+        |> IO.inspect()
       )
 
     results
@@ -40,6 +42,23 @@ defmodule MyAttireDemoApi.Products do
       "page" => page,
       "offset" => from_offset
     })
+  end
+
+  defp add_filters(query, %{filters: []}), do: query
+
+  defp add_filters(query, filters) do
+    IO.inspect(filters)
+
+    filters =
+      filters.filters
+      |> Enum.map(fn %{type: field_name, values: values} ->
+        %{"terms" => %{"#{field_name}.keyword" => values}}
+      end)
+
+    current_query = get_in(query, ["query", "bool", "must"])
+
+    query
+    |> put_in(["query", "bool", "must"], [current_query] ++ filters)
   end
 
   defp exclude_merchants(query) do

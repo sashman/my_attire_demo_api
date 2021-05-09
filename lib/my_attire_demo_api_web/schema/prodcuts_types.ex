@@ -1,6 +1,15 @@
 defmodule MyAttireDemoApiWeb.Schema.ProdcutsTypes do
   use Absinthe.Schema.Notation
 
+  input_object :filters do
+    field(:filters, list_of(:filter))
+  end
+
+  input_object :filter do
+    field(:type, :string)
+    field(:values, list_of(:string))
+  end
+
   object :products_result do
     field(:data, list_of(:product))
     field(:meta, :products_meta)

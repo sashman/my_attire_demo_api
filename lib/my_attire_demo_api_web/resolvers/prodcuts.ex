@@ -1,8 +1,7 @@
 defmodule MyAttireDemoApiWeb.Resolvers.Prodcuts do
-  alias MyAttireDemoApi.Products
+  alias MyAttireDemoApi.{Products, Filters}
 
-  def list_products(_parent, %{term: term, page: page, page_size: page_size} = args, _resolution) do
-    IO.inspect(args)
+  def list_products(_parent, %{term: term, page: page, page_size: page_size}, _resolution) do
     products_response = Products.search(term, page, page_size)
 
     data =
@@ -38,5 +37,24 @@ defmodule MyAttireDemoApiWeb.Resolvers.Prodcuts do
     }
 
     {:ok, %{data: data, meta: meta}}
+  end
+
+  def list_available_filters(_, _, _) do
+    filters_response = Filters.list_all()
+
+    available_filters =
+      filters_response["aggregations"]
+      |> Enum.map(fn {filter_type, %{"buckets" => buckets}} ->
+        %{
+          type: filter_type,
+          values:
+            buckets
+            |> Enum.map(fn %{"key" => key, "doc_count" => doc_count} ->
+              %{value: key, count: doc_count}
+            end)
+        }
+      end)
+
+    {:ok, available_filters}
   end
 end

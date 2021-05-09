@@ -1,5 +1,6 @@
 defmodule MyAttireDemoApiWeb.Schema do
   use Absinthe.Schema
+  import_types(MyAttireDemoApiWeb.Schema.FiltersTypes)
   import_types(MyAttireDemoApiWeb.Schema.ProdcutsTypes)
 
   alias MyAttireDemoApiWeb.Resolvers
@@ -11,6 +12,11 @@ defmodule MyAttireDemoApiWeb.Schema do
       arg(:page, :integer)
       arg(:page_size, :integer)
       resolve(&Resolvers.Prodcuts.list_products/3)
+    end
+
+    @desc "Available filters"
+    field :avilable_filters, list_of(:available_filter) do
+      resolve(&Resolvers.Prodcuts.list_available_filters/3)
     end
   end
 end

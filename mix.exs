@@ -42,7 +42,10 @@ defmodule MyAttireDemoApi.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:csv, "~> 2.4"},
       {:elasticsearch_elixir_bulk_processor, "~> 0.1"},
-      {:cors_plug, "~> 2.0"}
+      {:cors_plug, "~> 2.0"},
+      {:absinthe_gen, "~> 0.2", only: [:dev]},
+      {:absinthe, "~> 1.5"},
+      {:absinthe_plug, "~> 1.5"}
     ]
   end
 

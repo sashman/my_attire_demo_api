@@ -44,6 +44,9 @@ defmodule MyAttireDemoApi.Products do
     })
   end
 
+  defp add_filters(query, nil), do: query
+  defp add_filters(query, %{}), do: query
+  defp add_filters(query, %{filters: nil}), do: query
   defp add_filters(query, %{filters: []}), do: query
 
   defp add_filters(query, filters) do

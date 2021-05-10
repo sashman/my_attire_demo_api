@@ -3,9 +3,14 @@ defmodule MyAttireDemoApiWeb.Resolvers.Prodcuts do
 
   def list_products(
         _parent,
-        %{term: term, page: page, page_size: page_size, filters: filters},
+        args,
         _resolution
       ) do
+    term = args[:term] || ""
+    page = args[:page]
+    page_size = args[:page_size]
+    filters = args[:filters]
+
     products_response = Products.search(term, page, page_size, filters)
 
     data =

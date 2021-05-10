@@ -66,7 +66,18 @@ defmodule MyAttireDemoApiWeb.Resolvers.Prodcuts do
             end)
         }
       end)
+      |> add_hardcoded_filters()
 
     {:ok, available_filters}
+  end
+
+  defp add_hardcoded_filters(available_filters) do
+    available_filters ++
+      [
+        %{
+          type: "group_category",
+          values: [%{value: "mens"}, %{value: "womens"}, %{value: "kids"}]
+        }
+      ]
   end
 end

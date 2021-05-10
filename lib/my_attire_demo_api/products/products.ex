@@ -1,4 +1,6 @@
 defmodule MyAttireDemoApi.Products do
+  require Logger
+
   def search(term, page, page_size, filters) do
     page_size = page_size || 10
     page = page || 0
@@ -7,33 +9,37 @@ defmodule MyAttireDemoApi.Products do
     filter_path =
       "hits.hits._id,hits.hits._score,hits.hits.highlight,hits.hits._source,hits.total,aggregations"
 
-    {:ok, results} =
-      Elasticsearch.post(
-        MyAttireDemoApi.ElasticsearchCluster,
-        "/attire/_search?track_total_hits=true&filter_path=#{filter_path}",
-        %{
-          "size" => page_size,
-          "from" => from_offset,
-          "query" => %{
-            "bool" => %{
-              "must" => %{
-                "multi_match" => %{
-                  "query" => term,
-                  "type" => "most_fields",
-                  "fields" => [
-                    "product_name^3",
-                    "description^2",
-                    "category_name",
-                    "merchant_name"
-                  ]
-                }
+    query =
+      %{
+        "size" => page_size,
+        "from" => from_offset,
+        "query" => %{
+          "bool" => %{
+            "must" => %{
+              "multi_match" => %{
+                "query" => term,
+                "type" => "most_fields",
+                "fields" => [
+                  "product_name^3",
+                  "description^2",
+                  "category_name",
+                  "merchant_name"
+                ]
               }
             }
           }
         }
-        |> add_filters(filters)
-        |> exclude_merchants()
-        |> IO.inspect()
+      }
+      |> add_filters(filters)
+      |> exclude_merchants()
+
+    Logger.info(query |> Jason.encode!())
+
+    {:ok, results} =
+      Elasticsearch.post(
+        MyAttireDemoApi.ElasticsearchCluster,
+        "/attire/_search?track_total_hits=true&filter_path=#{filter_path}",
+        query
       )
 
     results
@@ -45,17 +51,18 @@ defmodule MyAttireDemoApi.Products do
   end
 
   defp add_filters(query, nil), do: query
-  defp add_filters(query, %{}), do: query
   defp add_filters(query, %{filters: nil}), do: query
   defp add_filters(query, %{filters: []}), do: query
 
   defp add_filters(query, filters) do
-    IO.inspect(filters)
-
     filters =
       filters.filters
-      |> Enum.map(fn %{type: field_name, values: values} ->
-        %{"terms" => %{"#{field_name}.keyword" => values}}
+      |> Enum.flat_map(fn
+        %{type: "group_category", values: values} ->
+          values |> Enum.map(&group_category/1)
+
+        %{type: field_name, values: values} ->
+          %{"terms" => %{"#{field_name}.keyword" => values}}
       end)
 
     current_query = get_in(query, ["query", "bool", "must"])
@@ -83,7 +90,26 @@ defmodule MyAttireDemoApi.Products do
     |> put_in(["query", "bool", "must_not"], exclusion)
   end
 
-  defp from(page_size, page) do
-    page * page_size
-  end
+  defp from(page_size, page), do: page * page_size
+
+  defp group_category("mens"),
+    do: %{
+      "match" => %{
+        "category_name" => "mens men's men"
+      }
+    }
+
+  defp group_category("womens"),
+    do: %{
+      "match" => %{
+        "category_name" => "womens women's women"
+      }
+    }
+
+  defp group_category("kids"),
+    do: %{
+      "match" => %{
+        "category_name" => "kid kids kid's children childrens children's child childs child's"
+      }
+    }
 end

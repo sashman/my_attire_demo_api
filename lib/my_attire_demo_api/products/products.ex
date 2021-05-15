@@ -57,13 +57,8 @@ defmodule MyAttireDemoApi.Products do
   defp add_filters(query, filters) do
     filters =
       filters.filters
-      |> Enum.flat_map(fn
-        %{type: "group_category", values: values} ->
-          values |> Enum.map(&group_category/1)
-
-        %{type: field_name, values: values} ->
-          %{"terms" => %{"#{field_name}.keyword" => values}}
-      end)
+      |> Enum.flat_map(&filters_to_query_parts/1)
+      |> IO.inspect()
 
     current_query = get_in(query, ["query", "bool", "must"])
 
@@ -91,6 +86,12 @@ defmodule MyAttireDemoApi.Products do
   end
 
   defp from(page_size, page), do: page * page_size
+
+  defp filters_to_query_parts(%{type: "group_category", values: values}),
+    do: values |> Enum.map(&group_category/1)
+
+  defp filters_to_query_parts(%{type: field_name, values: values}),
+    do: [%{"terms" => %{"#{field_name}.keyword" => values}}]
 
   defp group_category("mens"),
     do: %{

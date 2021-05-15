@@ -1,5 +1,5 @@
 defmodule MyAttireDemoApiWeb.Resolvers.Prodcuts do
-  alias MyAttireDemoApi.{Products, Filters}
+  alias MyAttireDemoApi.{Products, AvailableFilters}
 
   def list_products(
         _parent,
@@ -52,7 +52,7 @@ defmodule MyAttireDemoApiWeb.Resolvers.Prodcuts do
   end
 
   def list_available_filters(_, _, _) do
-    filters_response = Filters.list_all()
+    filters_response = AvailableFilters.list_all()
 
     available_filters =
       filters_response["aggregations"]

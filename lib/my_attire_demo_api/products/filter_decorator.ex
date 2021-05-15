@@ -1,0 +1,2 @@
+defmodule MyAttireDemoApi.FilterDecorator do
+end

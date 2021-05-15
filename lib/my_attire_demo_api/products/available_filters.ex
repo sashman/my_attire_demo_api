@@ -1,4 +1,4 @@
-defmodule MyAttireDemoApi.Filters do
+defmodule MyAttireDemoApi.AvailableFilters do
   def list_all() do
     filter_path = "hits.total,aggregations"
 

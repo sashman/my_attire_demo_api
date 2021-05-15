@@ -16,7 +16,7 @@ defmodule MyAttireDemoApiWeb.Schema do
     end
 
     @desc "Available filters"
-    field :avilable_filters, list_of(:available_filter) do
+    field :available_filters, list_of(:available_filter) do
       resolve(&Resolvers.Prodcuts.list_available_filters/3)
     end
   end

@@ -8,14 +8,25 @@ defmodule MyAttireDemoApi.FilterDecorator do
       filters.filters
       |> Enum.flat_map(&filters_to_query_parts/1)
 
-    current_query = get_in(query, ["query", "bool", "must"])
+    new_filters =
+      get_in(query, ["query", "bool", "must"])
+      |> case do
+        nil ->
+          filters
+
+        current_query ->
+          [current_query] ++ filters
+      end
 
     query
-    |> create_or_put_in(["query", "bool", "must"], [current_query] ++ filters)
+    |> create_or_put_in(["query", "bool", "must"], new_filters)
   end
 
   defp filters_to_query_parts(%{type: "group_category", values: values}),
     do: values |> Enum.map(&group_category/1)
+
+  defp filters_to_query_parts(%{type: "product_ids", values: values}),
+    do: [%{"terms" => %{"aw_product_id" => values}}]
 
   defp filters_to_query_parts(%{type: field_name, values: values}),
     do: [%{"terms" => %{"#{field_name}.keyword" => values}}]

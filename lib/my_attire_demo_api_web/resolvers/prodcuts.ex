@@ -78,6 +78,10 @@ defmodule MyAttireDemoApiWeb.Resolvers.Prodcuts do
         %{
           type: "group_category",
           values: [%{value: "mens"}, %{value: "womens"}, %{value: "kids"}]
+        },
+        %{
+          type: "product_ids",
+          values: []
         }
       ]
   end

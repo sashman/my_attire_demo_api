@@ -8,7 +8,7 @@ defmodule MyAttireDemoApiWeb.Schema do
   query do
     @desc "Search for products"
     field :products, :products_result do
-      arg(:term, non_null(:string))
+      arg(:term, :string)
       arg(:page, :integer)
       arg(:page_size, :integer)
       arg(:filters, :filters)

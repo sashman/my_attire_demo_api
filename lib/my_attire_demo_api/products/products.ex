@@ -14,24 +14,9 @@ defmodule MyAttireDemoApi.Products do
     query =
       %{
         "size" => page_size,
-        "from" => from_offset,
-        "query" => %{
-          "bool" => %{
-            "must" => %{
-              "multi_match" => %{
-                "query" => term,
-                "type" => "most_fields",
-                "fields" => [
-                  "product_name^3",
-                  "description^2",
-                  "category_name",
-                  "merchant_name"
-                ]
-              }
-            }
-          }
-        }
+        "from" => from_offset
       }
+      |> add_match_query(term)
       |> FilterDecorator.add_filters(filters)
       |> exclude_merchants()
 
@@ -52,6 +37,32 @@ defmodule MyAttireDemoApi.Products do
     })
   end
 
+  defp add_match_query(query, ""), do: query
+
+  defp add_match_query(query, term) do
+    condition = %{
+      "query" => %{
+        "bool" => %{
+          "must" => %{
+            "multi_match" => %{
+              "query" => term,
+              "type" => "most_fields",
+              "fields" => [
+                "product_name^3",
+                "description^2",
+                "category_name",
+                "merchant_name"
+              ]
+            }
+          }
+        }
+      }
+    }
+
+    query
+    |> Map.merge(condition)
+  end
+
   defp exclude_merchants(query) do
     exclusion = [
       %{
@@ -68,8 +79,12 @@ defmodule MyAttireDemoApi.Products do
     ]
 
     query
-    |> put_in(["query", "bool", "must_not"], exclusion)
+    |> create_or_put_in(["query", "bool", "must_not"], exclusion)
   end
 
   defp from(page_size, page), do: page * page_size
+
+  defp create_or_put_in(map, path, value) do
+    put_in(map, Enum.map(path, &Access.key(&1, %{})), value)
+  end
 end

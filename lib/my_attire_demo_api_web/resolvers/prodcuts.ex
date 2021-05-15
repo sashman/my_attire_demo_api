@@ -51,8 +51,9 @@ defmodule MyAttireDemoApiWeb.Resolvers.Prodcuts do
     {:ok, %{data: data, meta: meta}}
   end
 
-  def list_available_filters(_, _, _) do
-    filters_response = AvailableFilters.list_all()
+  def list_available_filters(_, args, _) do
+    filters = args[:filters]
+    filters_response = AvailableFilters.list_all(filters)
 
     available_filters =
       filters_response["aggregations"]

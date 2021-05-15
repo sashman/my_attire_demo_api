@@ -1,5 +1,7 @@
 defmodule MyAttireDemoApi.AvailableFilters do
-  def list_all() do
+  alias MyAttireDemoApi.FilterDecorator
+
+  def list_all(filters) do
     filter_path = "hits.total,aggregations"
 
     {:ok, results} =
@@ -23,6 +25,7 @@ defmodule MyAttireDemoApi.AvailableFilters do
             }
           }
         }
+        |> FilterDecorator.add_filters(filters)
       )
 
     results

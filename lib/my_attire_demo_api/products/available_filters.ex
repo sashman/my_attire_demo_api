@@ -15,12 +15,28 @@ defmodule MyAttireDemoApi.AvailableFilters do
               "terms" => %{
                 field: "category_name.keyword",
                 size: 1000
+              },
+              "aggs" => %{
+                "ids" => %{
+                  "top_hits" => %{
+                    "size" => 1,
+                    "_source" => %{"includes" => "category_id"}
+                  }
+                }
               }
             },
             "merchant_name" => %{
               "terms" => %{
                 field: "merchant_name.keyword",
                 size: 1000
+              },
+              "aggs" => %{
+                "ids" => %{
+                  "top_hits" => %{
+                    "size" => 1,
+                    "_source" => %{"includes" => "merchant_id"}
+                  }
+                }
               }
             }
           }

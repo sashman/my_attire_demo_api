@@ -1,6 +1,11 @@
 defmodule MyAttireDemoApiWeb.Resolvers.Prodcuts do
   alias MyAttireDemoApi.{Products, AvailableFilters}
 
+  @id_field_map %{
+    "category_name" => "category_id",
+    "merchant_name" => "merchant_id"
+  }
+
   def list_products(
         _parent,
         args,
@@ -22,6 +27,7 @@ defmodule MyAttireDemoApiWeb.Resolvers.Prodcuts do
       |> Enum.map(fn %{"_source" => source} ->
         %{
           category_name: source["category_name"],
+          category_id: source["category_id"],
           currency: source["currency"],
           deep_link: source["aw_deep_link"],
           delivery_cost: source["delivery_cost"],
@@ -31,6 +37,7 @@ defmodule MyAttireDemoApiWeb.Resolvers.Prodcuts do
           merchant_deep_link: source["merchant_deep_link"],
           merchant_image_url: source["merchant_image_url"],
           merchant_name: source["merchant_name"],
+          merchant_id: source["merchant_id"],
           product_id: source["aw_product_id"],
           product_name: source["product_name"],
           search_price: source["search_price"]
@@ -62,8 +69,19 @@ defmodule MyAttireDemoApiWeb.Resolvers.Prodcuts do
           type: filter_type,
           values:
             buckets
-            |> Enum.map(fn %{"key" => key, "doc_count" => doc_count} ->
-              %{value: key, count: doc_count}
+            |> Enum.map(fn %{
+                             "key" => key,
+                             "doc_count" => doc_count,
+                             "ids" => %{"hits" => %{"hits" => id_hits}}
+                           } ->
+              id =
+                id_hits
+                |> List.first()
+                |> get_in(["_source", @id_field_map[filter_type]])
+
+              IO.inspect(filter_type)
+
+              %{value: key, id: id, count: doc_count}
             end)
         }
       end)

@@ -1,6 +1,7 @@
 defmodule MyAttireDemoApiWeb.Schema do
   use Absinthe.Schema
   import_types(MyAttireDemoApiWeb.Schema.FiltersTypes)
+  import_types(MyAttireDemoApiWeb.Schema.FiltersTypesTypes)
   import_types(MyAttireDemoApiWeb.Schema.ProdcutsTypes)
 
   alias MyAttireDemoApiWeb.Resolvers

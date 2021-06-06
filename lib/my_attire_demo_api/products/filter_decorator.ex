@@ -1,4 +1,6 @@
 defmodule MyAttireDemoApi.FilterDecorator do
+  require Logger
+
   def add_filters(query, nil), do: query
   def add_filters(query, %{filters: nil}), do: query
   def add_filters(query, %{filters: []}), do: query
@@ -28,8 +30,20 @@ defmodule MyAttireDemoApi.FilterDecorator do
   defp filters_to_query_parts(%{type: "product_ids", values: values}),
     do: [%{"terms" => %{"aw_product_id" => values}}]
 
-  defp filters_to_query_parts(%{type: field_name, values: values}),
-    do: [%{"terms" => %{"#{field_name}.keyword" => values}}]
+  defp filters_to_query_parts(%{type: "category_ids", values: values}),
+    do: [%{"terms" => %{"category_id" => values}}]
+
+  defp filters_to_query_parts(%{type: "merchant_ids", values: values}),
+    do: [%{"terms" => %{"merchant_id" => values}}]
+
+  defp filters_to_query_parts(%{type: field_name, values: values})
+       when field_name in ["category_name", "merchant_name"],
+       do: [%{"terms" => %{"#{field_name}.keyword" => values}}]
+
+  defp filters_to_query_parts(%{type: type}) do
+    Logger.warn("Unknown filter type #{type}")
+    []
+  end
 
   defp group_category("mens"),
     do: %{

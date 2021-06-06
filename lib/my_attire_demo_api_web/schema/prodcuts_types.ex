@@ -6,7 +6,7 @@ defmodule MyAttireDemoApiWeb.Schema.ProdcutsTypes do
   end
 
   input_object :filter do
-    field(:type, :string)
+    field(:type, :filter_type_name)
     field(:values, list_of(:string))
   end
 
@@ -24,6 +24,7 @@ defmodule MyAttireDemoApiWeb.Schema.ProdcutsTypes do
 
   object :product do
     field(:category_name, :string)
+    field(:category_id, :string)
     field(:currency, :string)
     field(:deep_link, :string)
     field(:delivery_cost, :string)
@@ -33,6 +34,7 @@ defmodule MyAttireDemoApiWeb.Schema.ProdcutsTypes do
     field(:merchant_deep_link, :string)
     field(:merchant_image_url, :string)
     field(:merchant_name, :string)
+    field(:merchant_id, :string)
     field(:product_id, :string)
     field(:product_name, :string)
     field(:search_price, :float)

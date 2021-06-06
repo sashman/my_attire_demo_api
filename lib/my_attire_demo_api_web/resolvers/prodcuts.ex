@@ -60,7 +60,8 @@ defmodule MyAttireDemoApiWeb.Resolvers.Prodcuts do
 
   def list_available_filters(_, args, _) do
     filters = args[:filters]
-    filters_response = AvailableFilters.list_all(filters)
+    term = args[:term] || ""
+    filters_response = AvailableFilters.list_all(filters, term)
 
     available_filters =
       filters_response["aggregations"]
@@ -78,8 +79,6 @@ defmodule MyAttireDemoApiWeb.Resolvers.Prodcuts do
                 id_hits
                 |> List.first()
                 |> get_in(["_source", @id_field_map[filter_type]])
-
-              IO.inspect(filter_type)
 
               %{value: key, id: id, count: doc_count}
             end)

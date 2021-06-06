@@ -2,6 +2,7 @@ defmodule MyAttireDemoApi.Products do
   require Logger
 
   alias MyAttireDemoApi.FilterDecorator
+  alias MyAttireDemoApi.Products.TermMatchQuery
 
   def search(term, page, page_size, filters) do
     page_size = page_size || 10
@@ -16,7 +17,7 @@ defmodule MyAttireDemoApi.Products do
         "size" => page_size,
         "from" => from_offset
       }
-      |> add_match_query(term)
+      |> TermMatchQuery.add_match_query(term)
       |> FilterDecorator.add_filters(filters)
       |> exclude_merchants()
 
@@ -35,32 +36,6 @@ defmodule MyAttireDemoApi.Products do
       "page" => page,
       "offset" => from_offset
     })
-  end
-
-  defp add_match_query(query, ""), do: query
-
-  defp add_match_query(query, term) do
-    condition = %{
-      "query" => %{
-        "bool" => %{
-          "must" => %{
-            "multi_match" => %{
-              "query" => term,
-              "type" => "most_fields",
-              "fields" => [
-                "product_name^3",
-                "description^2",
-                "category_name",
-                "merchant_name"
-              ]
-            }
-          }
-        }
-      }
-    }
-
-    query
-    |> Map.merge(condition)
   end
 
   defp exclude_merchants(query) do

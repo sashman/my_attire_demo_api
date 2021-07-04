@@ -1,5 +1,6 @@
 defmodule MyAttireDemoApiWeb.Resolvers.Prodcuts do
   alias MyAttireDemoApi.{Products, AvailableFilters}
+  alias MyAttireDemoApiWeb.Schema.FiltersTypesTypes
 
   @id_field_map %{
     "category_name" => "category_id",
@@ -68,6 +69,7 @@ defmodule MyAttireDemoApiWeb.Resolvers.Prodcuts do
       |> Enum.map(fn {filter_type, %{"buckets" => buckets}} ->
         %{
           type: filter_type,
+          name: FiltersTypesTypes.filter_type_to_human(filter_type),
           values:
             buckets
             |> Enum.map(fn %{
@@ -80,7 +82,7 @@ defmodule MyAttireDemoApiWeb.Resolvers.Prodcuts do
                 |> List.first()
                 |> get_in(["_source", @id_field_map[filter_type]])
 
-              %{value: key, id: id, count: doc_count}
+              %{value: key, id: id, count: doc_count, type: to_slug(key)}
             end)
         }
       end)
@@ -102,4 +104,11 @@ defmodule MyAttireDemoApiWeb.Resolvers.Prodcuts do
         }
       ]
   end
+
+  defp to_slug(string),
+    do:
+      string
+      |> String.replace(~r{[^A-z0-9_]}, "_")
+      |> String.replace(~r{_(_+)}, "_")
+      |> String.downcase()
 end

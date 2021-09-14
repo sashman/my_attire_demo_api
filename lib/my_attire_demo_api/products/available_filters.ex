@@ -41,6 +41,7 @@ defmodule MyAttireDemoApi.AvailableFilters do
           }
         }
       }
+      |> exclude_merchants()
       |> FilterDecorator.add_filters(filters)
       |> TermMatchQuery.add_match_query(term)
 
@@ -54,5 +55,28 @@ defmodule MyAttireDemoApi.AvailableFilters do
       )
 
     results
+  end
+
+  defp exclude_merchants(query) do
+    exclusion = [
+      %{
+        "bool" => %{
+          "filter" => [
+            %{
+              "term" => %{
+                "merchant_name.keyword": "boohoo.com UK & IE"
+              }
+            }
+          ]
+        }
+      }
+    ]
+
+    query
+    |> create_or_put_in(["query", "bool", "must_not"], exclusion)
+  end
+
+  defp create_or_put_in(map, path, value) do
+    put_in(map, Enum.map(path, &Access.key(&1, %{})), value)
   end
 end

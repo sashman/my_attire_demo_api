@@ -9,4 +9,13 @@ defmodule MyAttireDemoApiWeb.Schema.FiltersTypesTypes do
     value(:merchant_ids, as: "merchant_ids", description: "Merchant by id")
     value(:merchant_name, as: "merchant_name", description: "Merchant by name")
   end
+
+  def filter_type_to_human("group_category"), do: "Group Category"
+  def filter_type_to_human("product_ids"), do: "Product IDs"
+  def filter_type_to_human("category_ids"), do: "Category IDs"
+  def filter_type_to_human("merchant_ids"), do: "Merchant IDs"
+  def filter_type_to_human("category_name"), do: "Categories"
+  def filter_type_to_human("merchant_name"), do: "Merchants"
+
+  def filter_type_to_human(filter_type), do: filter_type
 end
